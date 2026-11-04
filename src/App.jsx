@@ -81,7 +81,7 @@ function Ring({ value, size = 76, stroke = 8 }) {
   return (<svg width={size} height={size} className="-rotate-90"><circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-slate-200 dark:stroke-slate-800" /><circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} stroke="url(#ringGrad)" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c - (value / 100) * c} style={{ transition: 'stroke-dashoffset 0.9s cubic-bezier(.22,1,.36,1)' }} /><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#10b981" /><stop offset="100%" stopColor="#06b6d4" /></linearGradient></defs></svg>);
 }
 
-function AuthScreen({ onLogin }) {
+function AuthScreen({ onLogin, onGuestLogin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false); const [error, setError] = useState(null);
@@ -104,6 +104,12 @@ function AuthScreen({ onLogin }) {
           <button type="submit" disabled={loading} className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-500 disabled:opacity-50">{loading ? 'Processing...' : isLogin ? 'Log In' : 'Sign Up'}</button>
         </form>
         <div className="mt-6 text-center text-xs text-slate-400">{isLogin ? "Don't have an account? " : "Already have an account? "}<button onClick={() => { setIsLogin(!isLogin); setError(null); }} className="font-semibold text-emerald-400 hover:underline">{isLogin ? 'Sign up' : 'Log in'}</button></div>
+        
+        <div className="mt-6 pt-4 border-t border-slate-700/50">
+          <button onClick={onGuestLogin} className="w-full rounded-xl border border-slate-600 bg-slate-800 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-slate-700 hover:text-white">
+            Enter as Guest (Read-Only)
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -114,6 +120,7 @@ function AuthScreen({ onLogin }) {
    ============================================================ */
 export default function App() {
   const [session, setSession] = useState(null);
+  const [isGuestMode, setIsGuestMode] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [courses, setCourses] = useState([]);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem(THEME_KEY) !== 'light');
@@ -156,8 +163,10 @@ export default function App() {
         }
       };
       fetchCourses();
+    } else if (isGuestMode) {
+      setCourses(DEFAULT_COURSES.map((c, i) => ({ ...c, id: `guest-${i}`, tasks: [], sessions: [] })));
     }
-  }, [session]);
+  }, [session, isGuestMode]);
 
   useEffect(() => { document.documentElement.classList.toggle('dark', darkMode); localStorage.setItem(THEME_KEY, darkMode ? 'dark' : 'light'); }, [darkMode]);
   useEffect(() => { localStorage.setItem(MAIN_BG_MODE_KEY, mainBgMode); }, [mainBgMode]);
@@ -182,19 +191,19 @@ export default function App() {
   const fireConfetti = useCallback(() => { const id = Date.now(); setBursts(b => [...b, id]); setTimeout(() => setBursts(b => b.filter(x => x !== id)), 1800); }, []);
 
   const logFocusSession = async (subjectId, minutes) => {
-    if (!subjectId || minutes <= 0) return;
+    if (isGuestMode || !subjectId || minutes <= 0) return;
     const newSession = { course_id: subjectId, user_id: session?.user.id, minutes, session_date: new Date().toISOString().split('T')[0] };
     setCourses(prev => prev.map(c => c.id === subjectId ? { ...c, sessions: [...(c.sessions || []), { ...newSession, id: Date.now() }] } : c));
     if (session) await supabase.from('sessions').insert(newSession);
     notify(`Logged ${minutes}m focus session! 🎉`); fireConfetti();
   };
 
-  const toggleHard = async (id) => { const course = courses.find(c => c.id === id); setCourses(prev => prev.map(c => c.id === id ? { ...c, isHard: !c.isHard } : c)); if (session) await supabase.from('courses').update({ isHard: !course.isHard }).eq('id', id); };
-  const setLevel = async (id, level) => { setCourses(prev => prev.map(c => c.id === id ? { ...c, knowledgeLevel: level } : c)); if (session) await supabase.from('courses').update({ knowledgeLevel: level }).eq('id', id); };
-  const saveNotes = async (id) => { setCourses(prev => prev.map(c => c.id === id ? { ...c, notes: draft } : c)); if (session) await supabase.from('courses').update({ notes: draft }).eq('id', id); setEditingId(null); notify('Notes saved'); };
-  const addTask = async (courseId, text) => { const newTask = { course_id: courseId, user_id: session?.user.id, text, done: false }; setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: [...(c.tasks || []), { ...newTask, id: Date.now() }] } : c)); if (session) await supabase.from('tasks').insert(newTask); };
-  const toggleTask = async (courseId, taskId) => { const task = courses.find(c => c.id === courseId)?.tasks.find(t => t.id === taskId); setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: c.tasks.map(t => t.id === taskId ? { ...t, done: !t.done } : t) } : c)); if (session) await supabase.from('tasks').update({ done: !task.done }).eq('id', taskId); };
-  const deleteTask = async (courseId, taskId) => { setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: c.tasks.filter(t => t.id !== taskId) } : c)); if (session) await supabase.from('tasks').delete().eq('id', taskId); };
+  const toggleHard = async (id) => { if (isGuestMode) return; const course = courses.find(c => c.id === id); setCourses(prev => prev.map(c => c.id === id ? { ...c, isHard: !c.isHard } : c)); if (session) await supabase.from('courses').update({ isHard: !course.isHard }).eq('id', id); };
+  const setLevel = async (id, level) => { if (isGuestMode) return; setCourses(prev => prev.map(c => c.id === id ? { ...c, knowledgeLevel: level } : c)); if (session) await supabase.from('courses').update({ knowledgeLevel: level }).eq('id', id); };
+  const saveNotes = async (id) => { if (isGuestMode) return; setCourses(prev => prev.map(c => c.id === id ? { ...c, notes: draft } : c)); if (session) await supabase.from('courses').update({ notes: draft }).eq('id', id); setEditingId(null); notify('Notes saved'); };
+  const addTask = async (courseId, text) => { if (isGuestMode) return; const newTask = { course_id: courseId, user_id: session?.user.id, text, done: false }; setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: [...(c.tasks || []), { ...newTask, id: Date.now() }] } : c)); if (session) await supabase.from('tasks').insert(newTask); };
+  const toggleTask = async (courseId, taskId) => { if (isGuestMode) return; const task = courses.find(c => c.id === courseId)?.tasks.find(t => t.id === taskId); setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: c.tasks.map(t => t.id === taskId ? { ...t, done: !t.done } : t) } : c)); if (session) await supabase.from('tasks').update({ done: !task.done }).eq('id', taskId); };
+  const deleteTask = async (courseId, taskId) => { if (isGuestMode) return; setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tasks: c.tasks.filter(t => t.id !== taskId) } : c)); if (session) await supabase.from('tasks').delete().eq('id', taskId); };
 
   const stats = useMemo(() => {
     const total = courses.length; const hardCount = courses.filter(c => c.isHard).length;
@@ -218,7 +227,7 @@ export default function App() {
   const goToCourse = (code) => { const target = courseByCode[code]; if (!target) return; setTab('courses'); setHighlightId(target.id); setTimeout(() => document.getElementById(`course-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120); setTimeout(() => setHighlightId(null), 2800); };
 
   if (authLoading) return <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">Loading...</div>;
-  if (!session) return <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4"><AuthScreen /></div>;
+  if (!session && !isGuestMode) return <AuthScreen onGuestLogin={() => setIsGuestMode(true)} />;
 
   return (
     <div className="relative min-h-screen font-sans text-slate-900 transition-colors duration-300 dark:text-slate-100">
@@ -236,12 +245,12 @@ export default function App() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="relative"><div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-400 opacity-45 blur-md" /><div className="relative grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-lg"><GraduationCap className="h-5 w-5" /></div></div>
-            <div><div className="flex items-center gap-2"><h1 className="text-base font-extrabold tracking-tight sm:text-lg">Study Tracker</h1><span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 sm:inline">{session.user.email}</span></div><p className="hidden text-[11px] text-slate-500 dark:text-slate-400 sm:block">{now.toLocaleDateString('en-GB')} · Week {SEMESTER_TIMELINE.currentWeek}</p></div>
+            <div><div className="flex items-center gap-2"><h1 className="text-base font-extrabold tracking-tight sm:text-lg">Study Tracker</h1>{isGuestMode ? <span className="hidden rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700 sm:inline">Guest Mode</span> : <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 sm:inline">{session?.user.email}</span>}</div><p className="hidden text-[11px] text-slate-500 dark:text-slate-400 sm:block">{now.toLocaleDateString('en-GB')} · Week {SEMESTER_TIMELINE.currentWeek}</p></div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden items-center gap-1 rounded-xl border border-slate-200 bg-white/70 p-1 dark:border-slate-700 dark:bg-slate-900/60 md:flex"><ImageIcon className="h-3.5 w-3.5 text-slate-400 ml-1" />{['motivation', 'abstract', 'nature'].map(mode => (<button key={mode} onClick={() => setMainBgMode(mode)} className={`rounded-lg px-2 py-1 text-[10px] font-semibold capitalize transition ${mainBgMode === mode ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}`}>{mode}</button>))}</div>
             <div className="hidden items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs dark:border-teal-500/30 dark:bg-teal-500/10 lg:flex"><Timer className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" /><span className="font-mono font-bold text-teal-700 tabular-nums dark:text-teal-300">{countdown.d}d {String(countdown.h).padStart(2, '0')}h</span></div>
-            <button onClick={() => supabase.auth.signOut()} className="rounded-xl border border-rose-200 bg-rose-50 p-2 text-rose-500 transition hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10" title="Log Out"><LogOut className="h-4 w-4" /></button>
+            {session ? (<button onClick={() => supabase.auth.signOut()} className="rounded-xl border border-rose-200 bg-rose-50 p-2 text-rose-500 transition hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10" title="Log Out"><LogOut className="h-4 w-4" /></button>) : (<button onClick={() => setIsGuestMode(false)} className="rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white">Log In</button>)}
             <button onClick={() => setDarkMode(d => !d)} className="rounded-xl border border-slate-200 bg-white/70 p-2 text-slate-500 transition hover:scale-105 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">{darkMode ? <Sun className="h-4.5 w-4.5 text-amber-400" /> : <Moon className="h-4.5 w-4.5 text-emerald-600" />}</button>
           </div>
         </div>
@@ -290,22 +299,22 @@ export default function App() {
                     <div className="relative h-32 w-full overflow-hidden rounded-t-3xl bg-slate-900"><img src={course.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110" /><div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${hexToRgba(course.accentColor, 0.55)}, rgba(2,6,23,0.85))` }} /><div className="absolute inset-0 flex items-end justify-between p-4"><div className="flex items-center gap-2.5"><div className="grid h-11 w-11 place-items-center rounded-2xl border border-white/25 bg-white/15 text-xl backdrop-blur-md">{course.emoji}</div><div><p className="font-mono text-[10px] uppercase text-white/75">{course.code}</p><p className="text-sm font-semibold text-white">{course.visualLabel}</p></div></div><Icon className="h-7 w-7 text-white/85 animate-floaty" /></div>{course.isHard && <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full border border-rose-200/60 bg-rose-500/30 px-2 py-0.5 text-[10px] font-bold text-rose-50"><Flame className="h-3 w-3 fill-rose-300" /> Heavy</span>}</div>
 
                     <div className="relative p-5">
-                      <div className="flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">{course.titleZh}</h3><p className="truncate text-xs font-medium text-slate-600 dark:text-slate-400">{course.titleEn}</p></div><button onClick={() => toggleHard(course.id)} className={`shrink-0 rounded-xl border p-2 transition ${course.isHard ? 'border-rose-300 bg-rose-500/20 text-rose-500' : 'border-slate-200 text-slate-400'}`}><Flame className={`h-5 w-5 ${course.isHard ? 'fill-rose-500' : ''}`} /></button></div>
+                      <div className="flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">{course.titleZh}</h3><p className="truncate text-xs font-medium text-slate-600 dark:text-slate-400">{course.titleEn}</p></div><button onClick={() => toggleHard(course.id)} disabled={isGuestMode} className={`shrink-0 rounded-xl border p-2 transition disabled:opacity-50 ${course.isHard ? 'border-rose-300 bg-rose-500/20 text-rose-500' : 'border-slate-200 text-slate-400'}`}><Flame className={`h-5 w-5 ${course.isHard ? 'fill-rose-500' : ''}`} /></button></div>
 
-                      <div className="mt-4 border-t border-white/40 pt-3"><div className="flex items-center justify-between text-[11px]"><span className="text-slate-600 dark:text-slate-400">Knowledge level</span><span className="rounded-full px-2.5 py-0.5 font-semibold" style={{ color: levelInfo.color, background: hexToRgba(levelInfo.color, 0.15) }}>Lv {course.knowledgeLevel} · {levelInfo.label}</span></div><div className="mt-2 grid grid-cols-5 gap-1.5">{[1, 2, 3, 4, 5].map(lvl => (<button key={lvl} onClick={() => setLevel(course.id, lvl)} className={`h-2.5 rounded-full transition-all duration-300 hover:scale-y-[1.8] ${lvl <= course.knowledgeLevel ? '' : 'bg-slate-200/70 dark:bg-slate-800'}`} style={lvl <= course.knowledgeLevel ? { background: LEVEL_COLORS[course.knowledgeLevel - 1] } : undefined} />))}</div></div>
+                      <div className="mt-4 border-t border-white/40 pt-3"><div className="flex items-center justify-between text-[11px]"><span className="text-slate-600 dark:text-slate-400">Knowledge level</span><span className="rounded-full px-2.5 py-0.5 font-semibold" style={{ color: levelInfo.color, background: hexToRgba(levelInfo.color, 0.15) }}>Lv {course.knowledgeLevel} · {levelInfo.label}</span></div><div className="mt-2 grid grid-cols-5 gap-1.5">{[1, 2, 3, 4, 5].map(lvl => (<button key={lvl} onClick={() => setLevel(course.id, lvl)} disabled={isGuestMode} className={`h-2.5 rounded-full transition-all duration-300 hover:scale-y-[1.8] disabled:hover:scale-y-100 disabled:opacity-50 ${lvl <= course.knowledgeLevel ? '' : 'bg-slate-200/70 dark:bg-slate-800'}`} style={lvl <= course.knowledgeLevel ? { background: LEVEL_COLORS[course.knowledgeLevel - 1] } : undefined} />))}</div></div>
 
                       <div className="mt-4 rounded-2xl border border-white/40 bg-white/45 p-3 backdrop-blur-sm dark:border-slate-800/70 dark:bg-slate-950/45">
                         <div className="flex items-center justify-between text-[11px]"><span className="text-slate-600 dark:text-slate-400">Target · <strong>{course.weeklyTargetHours}h/wk</strong></span><span className="font-mono font-semibold" style={{ color: course.accentColor }}>{loggedHrs.toFixed(1)}h</span></div>
                         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800"><div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: course.accentColor }} /></div>
-                        <button onClick={() => setFocusRoom({ isOpen: true, subjectId: course.id, phase: 'focus', timeLeft: 45*60, isRunning: false, durationSetting: 45 })} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-emerald-300/70 bg-emerald-50/80 py-2 text-[11px] font-semibold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"><Play className="h-3.5 w-3.5" /> Open Focus Room</button>
+                        <button onClick={() => setFocusRoom({ isOpen: true, subjectId: course.id, phase: 'focus', timeLeft: 45*60, isRunning: false, durationSetting: 45 })} disabled={isGuestMode} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-emerald-300/70 bg-emerald-50/80 py-2 text-[11px] font-semibold text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"><Play className="h-3.5 w-3.5" /> Open Focus Room</button>
                       </div>
 
-                      <div className="mt-3"><div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400"><span className="flex items-center gap-1"><Edit3 className="h-3 w-3" /> Focus notes</span>{!isEditing && <button onClick={() => { setEditingId(course.id); setDraft(course.notes); }} className="font-semibold text-emerald-600">Edit</button>}</div>{isEditing ? (<div className="mt-1.5 space-y-2"><textarea value={draft} onChange={e => setDraft(e.target.value)} rows={2} className="w-full rounded-xl border p-2 text-xs outline-none" /><div className="flex justify-end gap-2"><button onClick={() => setEditingId(null)} className="text-[11px]">Cancel</button><button onClick={() => saveNotes(course.id)} className="text-[11px] text-emerald-600">Save</button></div></div>) : (<p className="mt-1.5 rounded-xl border border-dashed border-white/50 bg-white/35 p-2.5 text-xs italic text-slate-700 dark:border-slate-700/70 dark:bg-slate-950/30 dark:text-slate-300">“{course.notes}”</p>)}</div>
+                      <div className="mt-3"><div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400"><span className="flex items-center gap-1"><Edit3 className="h-3 w-3" /> Focus notes</span>{!isEditing && !isGuestMode && <button onClick={() => { setEditingId(course.id); setDraft(course.notes); }} className="font-semibold text-emerald-600">Edit</button>}</div>{isEditing ? (<div className="mt-1.5 space-y-2"><textarea value={draft} onChange={e => setDraft(e.target.value)} rows={2} className="w-full rounded-xl border p-2 text-xs outline-none" /><div className="flex justify-end gap-2"><button onClick={() => setEditingId(null)} className="text-[11px]">Cancel</button><button onClick={() => saveNotes(course.id)} className="text-[11px] text-emerald-600">Save</button></div></div>) : (<p className="mt-1.5 rounded-xl border border-dashed border-white/50 bg-white/35 p-2.5 text-xs italic text-slate-700 dark:border-slate-700/70 dark:bg-slate-950/30 dark:text-slate-300">“{course.notes}”</p>)}</div>
 
                       <div className="mt-3 rounded-2xl border border-white/40 bg-white/50 p-3 dark:border-slate-800/70 dark:bg-slate-950/40">
                         <div className="flex items-center justify-between text-[11px]"><span className="font-semibold flex items-center gap-1.5"><ListTodo className="h-3.5 w-3.5" /> To-do</span></div>
-                        <form onSubmit={e => { e.preventDefault(); const val = e.target.elements.task.value.trim(); if(val){ addTask(course.id, val); e.target.reset(); } }} className="mt-2 flex gap-1.5"><input name="task" placeholder="Add task..." className="flex-1 rounded-lg border border-slate-200 bg-white/80 px-2 py-1 text-[11px] outline-none" /><button type="submit" className="rounded-lg bg-emerald-600 px-2 text-white"><Plus className="h-3 w-3" /></button></form>
-                        {course.tasks?.map(t => (<div key={t.id} className="mt-1 flex items-center gap-2 text-[11px]"><button onClick={() => toggleTask(course.id, t.id)} className={`h-3.5 w-3.5 shrink-0 rounded border ${t.done ? 'bg-emerald-500 border-transparent text-white' : 'border-slate-300'}`}>{t.done && <Check className="h-2.5 w-2.5" />}</button><span className={t.done ? 'line-through text-slate-400' : ''}>{t.text}</span><button onClick={() => deleteTask(course.id, t.id)} className="ml-auto text-slate-400 hover:text-rose-500"><Trash2 className="h-3 w-3" /></button></div>))}
+                        {!isGuestMode && <form onSubmit={e => { e.preventDefault(); const val = e.target.elements.task.value.trim(); if(val){ addTask(course.id, val); e.target.reset(); } }} className="mt-2 flex gap-1.5"><input name="task" placeholder="Add task..." className="flex-1 rounded-lg border border-slate-200 bg-white/80 px-2 py-1 text-[11px] outline-none" /><button type="submit" className="rounded-lg bg-emerald-600 px-2 text-white"><Plus className="h-3 w-3" /></button></form>}
+                        {course.tasks?.map(t => (<div key={t.id} className="mt-1 flex items-center gap-2 text-[11px]"><button onClick={() => toggleTask(course.id, t.id)} disabled={isGuestMode} className={`h-3.5 w-3.5 shrink-0 rounded border disabled:opacity-50 ${t.done ? 'bg-emerald-500 border-transparent text-white' : 'border-slate-300'}`}>{t.done && <Check className="h-2.5 w-2.5" />}</button><span className={t.done ? 'line-through text-slate-400' : ''}>{t.text}</span>{!isGuestMode && <button onClick={() => deleteTask(course.id, t.id)} className="ml-auto text-slate-400 hover:text-rose-500"><Trash2 className="h-3 w-3" /></button>}</div>))}
                       </div>
                     </div>
                   </TiltCard>
@@ -387,7 +396,7 @@ export default function App() {
       </main>
 
       {/* FOCUS ROOM OVERLAY */}
-      {focusRoom.isOpen && activeSubject && (
+      {focusRoom.isOpen && activeSubject && !isGuestMode && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 animate-fade-in">
           <img src={getHourlyImage(focusBgMode)} className="absolute inset-0 h-full w-full object-cover opacity-60" />
           <div className="absolute inset-0 bg-slate-950/70" />
