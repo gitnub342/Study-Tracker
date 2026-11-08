@@ -20,9 +20,112 @@ const SEMESTER_TIMELINE = { currentWeek: 11, totalWeeks: 19 };
 const DAILY_ROUTINES = { gymDaysWake: '05:20 AM', gymSession: '06:00 – 07:00 AM', nonGymWake: '06:00 AM', bedtime: '09:30 – 10:00 PM' };
 
 const IMAGE_COLLECTIONS = {
-  motivation: ['https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=2000&q=80'],
-  abstract: ['https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1604871000636-074fa5117945?auto=format&fit=crop&w=2000&q=80'],
-  nature: ['https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2000&q=80', 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2000&q=80']
+  motivation: [
+    'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1435527173128-983b87201f4d?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1455390582262-044cdead2708?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1491841573634-28140fc7ced7?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1516534775068-ba3e7458af70?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1511649475669-e288648b2339?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=2000&q=80'
+  ],
+  abstract: [
+    'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1604871000636-074fa5117945?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1507908708918-778587c9e563?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1554147090-e1221a04a025?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1508614999368-9260051292e5?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1533158326339-7f3cf2404354?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1506259091721-347e791bab0f?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1531685250784-7569952593d2?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1524169358666-79f22534bc6e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1513817969-3490d0fa9a6a?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=2000&q=80'
+  ],
+  nature: [
+    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1444464666168-49b626f829e9?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1506744626753-1fa289ee4223?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1441829266145-6d4bfbd38eb4?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1439853949127-fa647821eba0?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1444464666168-49b626f829e9?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=2000&q=80',
+    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80'
+  ]
 };
 
 const QUOTES = [
@@ -237,7 +340,7 @@ export default function App() {
 
   const countdown = useMemo(() => { const diff = new Date('2027-01-10T23:59:59').getTime() - now.getTime(); return diff > 0 ? { d: Math.floor(diff / 86400000), h: Math.floor((diff % 86400000) / 3600000), m: Math.floor((diff % 3600000) / 60000) } : { d: 0, h: 0, m: 0 }; }, [now]);
   const quote = useMemo(() => QUOTES[Math.floor(now.getTime() / 3_600_000) % QUOTES.length], [now]);
-  const getHourlyImage = (mode) => IMAGE_COLLECTIONS[mode][Math.floor(now.getTime() / 3_600_000) % IMAGE_COLLECTIONS[mode].length];
+  const getTimedImage = (mode) => IMAGE_COLLECTIONS[mode][Math.floor(now.getTime() / 900_000) % IMAGE_COLLECTIONS[mode].length];
   const activeSubject = courses.find(c => c.id === focusRoom.subjectId);
   const courseByCode = useMemo(() => { const map = {}; courses.forEach(c => map[c.code] = c); return map; }, [courses]);
 
@@ -251,7 +354,7 @@ export default function App() {
       <style>{`@keyframes aurora { 0%, 100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(6%, -8%, 0) scale(1.15); } } @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } } @keyframes confetti { 0% { transform: translate3d(0,0,0) rotate(0deg); opacity: 1; } 100% { transform: translate3d(var(--dx,0px), 105vh, 0) rotate(var(--rot,360deg)); opacity: 0; } } @keyframes popIn { from { opacity: 0; transform: translateY(12px) scale(0.985); } to { opacity: 1; transform: none; } } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } .animate-pop-in { animation: popIn 0.45s cubic-bezier(.22,1,.36,1) both; } .animate-fade-in { animation: fadeIn 0.6s ease both; } .animate-floaty { animation: floaty 6s ease-in-out infinite; } .tilt { transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s ease; transform-style: preserve-3d; }`}</style>
 
       <div className={`pointer-events-none fixed inset-0 -z-10 overflow-hidden transition-opacity duration-700 ${focusRoom.isOpen ? 'opacity-0' : 'opacity-100'}`}>
-        <img key={getHourlyImage(mainBgMode)} src={getHourlyImage(mainBgMode)} alt="" className="absolute inset-0 h-full w-full object-cover animate-fade-in" style={{ opacity: darkMode ? 0.25 : 0.40 }} />
+        <img key={getTimedImage(mainBgMode)} src={getTimedImage(mainBgMode)} alt="" className="absolute inset-0 h-full w-full object-cover animate-fade-in" style={{ opacity: darkMode ? 0.25 : 0.40 }} />
         <div className={`absolute inset-0 ${darkMode ? 'bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950' : 'bg-gradient-to-b from-white/70 via-white/80 to-white/95'}`} />
       </div>
 
@@ -415,7 +518,7 @@ export default function App() {
       {/* FOCUS ROOM OVERLAY */}
       {focusRoom.isOpen && activeSubject && !isGuestMode && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 animate-fade-in">
-          <img key={getHourlyImage(focusBgMode)} src={getHourlyImage(focusBgMode)} className="absolute inset-0 h-full w-full object-cover opacity-60 animate-fade-in" />
+          <img key={getTimedImage(focusBgMode)} src={getTimedImage(focusBgMode)} className="absolute inset-0 h-full w-full object-cover opacity-60 animate-fade-in" />
           <div className="absolute inset-0 bg-slate-950/70" />
           
           {/* Top Bar: Back Button & Mode Switcher */}
