@@ -135,8 +135,103 @@ const QUOTES = [
   { text: 'Success is the sum of small efforts repeated day in and day out.', author: 'Robert Collier' },
   { text: "Don't watch the clock; do what it does. Keep going.", author: 'Sam Levenson' },
   { text: 'Small daily improvements are the key to staggering long-term results.', author: 'Robin Sharma' },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: 'Zig Ziglar' },
+  { text: 'The best time to plant a tree was 20 years ago. The second best time is now.', author: 'Chinese Proverb' },
+  { text: 'Motivation gets you going, but discipline keeps you growing.', author: 'John C. Maxwell' },
+  { text: 'Every accomplishment starts with the decision to try.', author: 'John F. Kennedy' },
+  { text: 'Do not wait to strike till the iron is hot; but make it hot by striking.', author: 'William B. Sprague' },
+  { text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs' },
+  { text: 'You miss 100% of the shots you don’t take.', author: 'Wayne Gretzky' },
+  { text: 'Great things are done by a series of small things brought together.', author: 'Vincent van Gogh' },
+  { text: 'Study while others are sleeping; work while others are loafing.', author: 'William A. Ward' },
+  { text: 'The journey of a thousand miles begins with a single step.', author: 'Lao Tzu' },
+  { text: 'Believe you can and you’re halfway there.', author: 'Theodore Roosevelt' },
+  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
+  { text: 'Quality is not an act, it is a habit.', author: 'Aristotle' },
+  { text: 'Fall seven times, stand up eight.', author: 'Japanese Proverb' },
+  { text: 'What we learn with pleasure we never forget.', author: 'Alfred Mercier' },
+  { text: 'Strive for progress, not perfection.', author: 'Unknown' },
+  { text: 'The future depends on what you do today.', author: 'Mahatma Gandhi' },
+  { text: 'Action is the foundational key to all success.', author: 'Pablo Picasso' },
+  { text: 'Do what you can, with what you have, where you are.', author: 'Theodore Roosevelt' },
+  { text: 'If you want to lift yourself up, lift up someone else.', author: 'Booker T. Washington' },
+  { text: 'The man who has confidence in himself gains the confidence of others.', author: 'Hasidic Proverb' },
+  { text: 'Courage is grace under pressure.', author: 'Ernest Hemingway' },
+  { text: 'It does not matter how slowly you go as long as you do not stop.', author: 'Confucius' },
+  { text: 'Our greatest glory is not in never falling, but in rising every time we fall.', author: 'Confucius' },
+  { text: 'The only limit to our realization of tomorrow is our doubts of today.', author: 'Franklin D. Roosevelt' },
+  { text: 'In the middle of difficulty lies opportunity.', author: 'Albert Einstein' },
+  { text: 'Life is 10% what happens to us and 90% how we react to it.', author: 'Charles R. Swindoll' },
+  { text: 'The mind is everything. What you think you become.', author: 'Buddha' },
+  { text: 'The best way to predict the future is to create it.', author: 'Peter Drucker' },
+  { text: 'You are never too old to set another goal or to dream a new dream.', author: 'C.S. Lewis' },
+  { text: 'The secret of change is to focus all your energy not on fighting the old, but on building the new.', author: 'Socrates' },
+  { text: 'There are no secrets to success. It is the result of preparation, hard work, and learning from failure.', author: 'Colin Powell' },
+  { text: 'The two most important days in your life are the day you are born and the day you find out why.', author: 'Mark Twain' },
+  { text: 'If you look at what you have in life, you’ll always have more.', author: 'Oprah Winfrey' },
+  { text: 'I find that the harder I work, the more luck I seem to have.', author: 'Thomas Jefferson' },
+  { text: 'Opportunities don’t happen. You create them.', author: 'Chris Grosser' },
+  { text: 'Don’t be afraid to give up the good to go for the great.', author: 'John D. Rockefeller' },
+  { text: 'I attribute my success to this: I never gave or took any excuse.', author: 'Florence Nightingale' },
+  { text: 'The most difficult thing is the decision to act, the rest is merely tenacity.', author: 'Amelia Earhart' },
+  { text: 'Dream big and dare to fail.', author: 'Norman Vaughan' },
+  { text: 'The way to get started is to quit talking and begin doing.', author: 'Walt Disney' },
+  { text: 'If you really look closely, most overnight successes took a long time.', author: 'Steve Jobs' },
+  { text: 'The road to success and the road to failure are almost exactly the same.', author: 'Colin R. Davis' },
+  { text: 'Success usually comes to those who are too busy to be looking for it.', author: 'Henry David Thoreau' },
+  { text: 'There is no substitute for hard work.', author: 'Thomas Edison' },
+  { text: 'Focus on being productive instead of busy.', author: 'Tim Ferriss' },
+  { text: 'The pain you feel today will be the strength you feel tomorrow.', author: 'Unknown' },
+  { text: 'A river cuts through rock, not because of its power, but because of its persistence.', author: 'James N. Watkins' },
+  { text: 'Do something today that your future self will thank you for.', author: 'Sean Patrick Flanery' },
+  { text: 'Winners are not people who never fail, but people who never quit.', author: 'Unknown' },
+  { text: 'Your limitation—it’s only your imagination.', author: 'Unknown' },
+  { text: 'Push yourself, because no one else is going to do it for you.', author: 'Unknown' },
+  { text: 'Sometimes later becomes never. Do it now.', author: 'Unknown' },
+  { text: 'Great things never come from comfort zones.', author: 'Unknown' },
+  { text: 'Dream it. Wish it. Do it.', author: 'Unknown' },
+  { text: 'Success doesn’t just find you. You have to go out and get it.', author: 'Unknown' },
+  { text: 'The harder you work for something, the greater you’ll feel when you achieve it.', author: 'Unknown' },
+  { text: 'Dream bigger. Do bigger.', author: 'Unknown' },
+  { text: 'Don’t stop when you’re tired. Stop when you’re done.', author: 'Unknown' },
+  { text: 'Wake up with determination. Go to bed with satisfaction.', author: 'George Lorimer' },
+  { text: 'Do something today that your future self will thank you for.', author: 'Unknown' },
+  { text: 'Little things make big days.', author: 'Unknown' },
+  { text: 'It’s going to be hard, but hard does not mean impossible.', author: 'Unknown' },
+  { text: 'Don’t wait for opportunity. Create it.', author: 'Unknown' },
+  { text: 'Sometimes we’re tested not to show our weaknesses, but to discover our strengths.', author: 'Unknown' },
+  { text: 'The key to success is to focus on goals, not obstacles.', author: 'Unknown' },
+  { text: 'Dream it. Believe it. Build it.', author: 'Unknown' },
+  { text: 'You don’t always get what you wish for; you get what you work for.', author: 'Unknown' },
+  { text: 'It’s not about having time. It’s about making time.', author: 'Unknown' },
+  { text: 'Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.', author: 'Dale Carnegie' },
+  { text: 'If you want to achieve greatness stop asking for permission.', author: 'Unknown' },
+  { text: 'Things work out best for those who make the best of how things work out.', author: 'John Wooden' },
+  { text: 'To live a creative life, we must lose our fear of being wrong.', author: 'Joseph Chilton Pearce' },
+  { text: 'If you are not willing to risk the usual, you will have to settle for the ordinary.', author: 'Jim Rohn' },
+  { text: 'Trust because you are willing to accept the risk, not because it’s safe or certain.', author: 'Unknown' },
+  { text: 'Take up one idea. Make that one idea your life—think of it, dream of it, live on that idea.', author: 'Swami Vivekananda' },
+  { text: 'All our dreams can come true, if we have the courage to pursue them.', author: 'Walt Disney' },
+  { text: 'The best revenge is massive success.', author: 'Frank Sinatra' },
+  { text: 'People who succeed have momentum. The more they succeed, the more they want to succeed.', author: 'Tony Robbins' },
+  { text: "The only place where success comes before work is in the dictionary.", author: 'Vidal Sassoon' },
+  { text: "Many of life's failures are people who did not realize how close they were to success when they gave up.", author: 'Thomas Edison' },
+  { text: "The successful warrior is the average man, with laser-like focus.", author: 'Bruce Lee' },
+  { text: "There are two types of people who will tell you that you cannot make a difference in this world: those who are afraid to try and those who are afraid you will succeed.", author: 'Ray Goforth' },
+  { text: "Successful people do what unsuccessful people are not willing to do. Don't wish it were easier; wish you were better.", author: 'Jim Rohn' },
+  { text: "I owe my success to having listened respectfully to the very best advice, and then going away and doing the exact opposite.", author: 'G.K. Chesterton' },
+  { text: "The only thing standing between you and your goal is the story you keep telling yourself as to why you can't achieve it.", author: 'Jordan Belfort' },
+  { text: "The real test is not whether you avoid this failure, because you won't. It's whether you let it harden or shame you into inaction, or whether you learn from it.", author: 'Barack Obama' },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: 'Winston Churchill' },
+  { text: "Do not be embarrassed by your failures, learn from them and start again.", author: 'Richard Branson' },
+  { text: "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", author: 'Stephen King' },
+  { text: "You have to learn the rules of the game. And then you have to play better than anyone else.", author: 'Albert Einstein' },
+  { text: "Success isn't just about what you accomplish in your life; it's about what you inspire others to do.", author: 'Unknown' },
+  { text: "I never dreamed about success. I worked for it.", author: 'Estée Lauder' },
+  { text: "The difference between ordinary and extraordinary is that little extra.", author: 'Jimmy Johnson' },
+  { text: "You are never too old to set another goal or to dream a new dream.", author: 'Malala Yousafzai' },
+  { text: "Make your life a masterpiece; imagine no limitations on what you can be, have or do.", author: 'Brian Tracy' }
 ];
-
 const SUBJECT_EN = { CHN301: 'Advanced Chinese I', PHY102: 'University Physics II', CS201: 'Data Structures', CS205: 'Discrete Mathematics', PE104: 'Dragon Dance (PE)', CS102: 'Java Programming', MATH302: 'Engineering Math', MATH201: 'Linear Algebra', PHY102L: 'Physics Lab II' };
 
 const DEFAULT_COURSES = [
@@ -339,7 +434,7 @@ export default function App() {
   }, [courses, category, hardOnly, query]);
 
   const countdown = useMemo(() => { const diff = new Date('2027-01-10T23:59:59').getTime() - now.getTime(); return diff > 0 ? { d: Math.floor(diff / 86400000), h: Math.floor((diff % 86400000) / 3600000), m: Math.floor((diff % 3600000) / 60000) } : { d: 0, h: 0, m: 0 }; }, [now]);
-  const quote = useMemo(() => QUOTES[Math.floor(now.getTime() / 3_600_000) % QUOTES.length], [now]);
+  const quote = useMemo(() => QUOTES[Math.floor(now.getTime() / 600_000) % QUOTES.length], [now]);
   const getTimedImage = (mode) => IMAGE_COLLECTIONS[mode][Math.floor(now.getTime() / 900_000) % IMAGE_COLLECTIONS[mode].length];
   const activeSubject = courses.find(c => c.id === focusRoom.subjectId);
   const courseByCode = useMemo(() => { const map = {}; courses.forEach(c => map[c.code] = c); return map; }, [courses]);
@@ -551,6 +646,15 @@ export default function App() {
             <p className="mt-4 text-white/70 font-medium tracking-widest uppercase text-sm">
               {focusRoom.phase === 'focus' ? 'Deep Work in Progress' : 'Rest & Recharge'}
             </p>
+            {/* The Quote in the Focus Room */}
+           <div className="mt-8 max-w-lg text-center px-4">
+             <p className="text-white/80 italic text-lg font-serif">
+               “{quote.text}”
+             </p>
+             <p className="text-white/50 text-xs mt-2 uppercase tracking-widest">
+               — {quote.author}
+             </p>
+           </div>
 
             <div className="flex items-center gap-4 mt-12">
               <button onClick={() => setFocusRoom(prev => ({ ...prev, isRunning: !prev.isRunning }))} className="h-20 w-20 bg-white text-slate-900 rounded-full flex items-center justify-center hover:scale-105 transition shadow-xl">
