@@ -81,7 +81,7 @@ function Ring({ value, size = 76, stroke = 8 }) {
   return (<svg width={size} height={size} className="-rotate-90"><circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-slate-200 dark:stroke-slate-800" /><circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} stroke="url(#ringGrad)" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c - (value / 100) * c} style={{ transition: 'stroke-dashoffset 0.9s cubic-bezier(.22,1,.36,1)' }} /><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#10b981" /><stop offset="100%" stopColor="#06b6d4" /></linearGradient></defs></svg>);
 }
 
-function AuthScreen({ onLogin, onGuestLogin }) {
+function AuthScreen({ onGuestLogin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false); const [error, setError] = useState(null);
@@ -178,8 +178,12 @@ export default function App() {
     const id = setInterval(() => {
       setFocusRoom(prev => {
         if (prev.timeLeft <= 1) {
-          if (prev.phase === 'focus') { logFocusSession(prev.subjectId, prev.durationSetting); return { ...prev, phase: 'break', timeLeft: 5 * 60, isRunning: false }; }
-          else { return { ...prev, phase: 'focus', timeLeft: prev.durationSetting * 60, isRunning: false }; }
+          if (prev.phase === 'focus') { 
+            logFocusSession(prev.subjectId, prev.durationSetting); 
+            return { ...prev, phase: 'break', timeLeft: 5 * 60, isRunning: false }; 
+          } else { 
+            return { ...prev, phase: 'focus', timeLeft: prev.durationSetting * 60, isRunning: false }; 
+          }
         }
         return { ...prev, timeLeft: prev.timeLeft - 1 };
       });
@@ -196,6 +200,19 @@ export default function App() {
     setCourses(prev => prev.map(c => c.id === subjectId ? { ...c, sessions: [...(c.sessions || []), { ...newSession, id: Date.now() }] } : c));
     if (session) await supabase.from('sessions').insert(newSession);
     notify(`Logged ${minutes}m focus session! 🎉`); fireConfetti();
+  };
+
+  const saveEarlyExit = () => {
+    if (!focusRoom.subjectId || isGuestMode) return;
+    const elapsedMins = Math.floor((focusRoom.durationSetting * 60 - focusRoom.timeLeft) / 60);
+    if (elapsedMins > 0 && focusRoom.phase === 'focus') {
+      logFocusSession(focusRoom.subjectId, elapsedMins);
+    }
+    setFocusRoom(prev => ({ ...prev, isOpen: false, isRunning: false }));
+  };
+
+  const changeDuration = (mins, phase = 'focus') => {
+    setFocusRoom(prev => ({ ...prev, phase, durationSetting: mins, timeLeft: mins * 60, isRunning: false }));
   };
 
   const toggleHard = async (id) => { if (isGuestMode) return; const course = courses.find(c => c.id === id); setCourses(prev => prev.map(c => c.id === id ? { ...c, isHard: !c.isHard } : c)); if (session) await supabase.from('courses').update({ isHard: !course.isHard }).eq('id', id); };
@@ -398,15 +415,42 @@ export default function App() {
       {/* FOCUS ROOM OVERLAY */}
       {focusRoom.isOpen && activeSubject && !isGuestMode && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 animate-fade-in">
-          <img src={getHourlyImage(focusBgMode)} className="absolute inset-0 h-full w-full object-cover opacity-60" />
+          <img key={getHourlyImage(focusBgMode)} src={getHourlyImage(focusBgMode)} className="absolute inset-0 h-full w-full object-cover opacity-60 animate-fade-in" />
           <div className="absolute inset-0 bg-slate-950/70" />
-          <button onClick={() => setFocusRoom(prev => ({ ...prev, isOpen: false, isRunning: false }))} className="absolute top-6 left-6 text-white bg-black/40 px-4 py-2 rounded-xl backdrop-blur flex items-center gap-2"><ChevronRight className="h-4 w-4 rotate-180" /> Back</button>
           
+          {/* Top Bar: Back Button & Mode Switcher */}
+          <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-6">
+            <button onClick={saveEarlyExit} className="flex items-center gap-2 rounded-xl bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black/60">
+              <ChevronRight className="h-4 w-4 rotate-180" /> Save & Exit
+            </button>
+            <div className="flex items-center gap-2 rounded-xl bg-black/40 p-1 backdrop-blur-md">
+              <ImageIcon className="h-4 w-4 text-white/70 ml-2" />
+              {['motivation', 'abstract', 'nature'].map(mode => (
+                <button key={mode} onClick={() => setFocusBgMode(mode)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition ${focusBgMode === mode ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'}`}>{mode}</button>
+              ))}
+            </div>
+          </div>
+
           <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-3xl text-white font-bold mb-8">{activeSubject.titleEn}</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-3xl">{activeSubject.emoji}</span>
+              <h2 className="text-3xl text-white font-bold">{activeSubject.titleEn}</h2>
+            </div>
+
+            {/* Phase & Duration Switcher */}
+            <div className="flex bg-black/40 rounded-full p-1 backdrop-blur-md mb-8">
+              <button onClick={() => changeDuration(45, 'focus')} className={`px-6 py-2 rounded-full text-sm font-semibold transition ${focusRoom.phase === 'focus' && focusRoom.durationSetting === 45 ? 'bg-emerald-500 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}>Focus 45m</button>
+              <button onClick={() => changeDuration(60, 'focus')} className={`px-6 py-2 rounded-full text-sm font-semibold transition ${focusRoom.phase === 'focus' && focusRoom.durationSetting === 60 ? 'bg-emerald-500 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}>Focus 60m</button>
+              <button onClick={() => changeDuration(5, 'break')} className={`px-6 py-2 rounded-full text-sm font-semibold transition ${focusRoom.phase === 'break' ? 'bg-teal-500 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}>Break 5m</button>
+            </div>
+
             <div className="text-[8rem] text-white font-extrabold tabular-nums leading-none">{formatTime(focusRoom.timeLeft)}</div>
-            <div className="flex gap-4 mt-12">
-              <button onClick={() => setFocusRoom(prev => ({ ...prev, isRunning: !prev.isRunning }))} className="h-20 w-20 bg-white text-slate-900 rounded-full flex items-center justify-center hover:scale-105 transition">
+            <p className="mt-4 text-white/70 font-medium tracking-widest uppercase text-sm">
+              {focusRoom.phase === 'focus' ? 'Deep Work in Progress' : 'Rest & Recharge'}
+            </p>
+
+            <div className="flex items-center gap-4 mt-12">
+              <button onClick={() => setFocusRoom(prev => ({ ...prev, isRunning: !prev.isRunning }))} className="h-20 w-20 bg-white text-slate-900 rounded-full flex items-center justify-center hover:scale-105 transition shadow-xl">
                 {focusRoom.isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
               </button>
             </div>
